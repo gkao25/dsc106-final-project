@@ -13,16 +13,14 @@ var svg = d3.select("#viz1")
           "translate(" + margin.left + "," + margin.top + ")");
 
 //Read the data
-d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv", function(data) {
+d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv").then(function(data) {
 
   // group the data: I want to draw one line per group
-  var sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
-  .key(function(d) { return d.name;})
-  .entries(data);
+  var sumstat = d3.groups(data, d => d.name);
 
   // Add X axis --> it is a date format
   var x = d3.scaleLinear()
-    .domain(d3.extent(data, function(d) { return d.year; }))
+    .domain(d3.extent(data, function(d) { return +d.year; }))
     .range([ 0, width ]);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -36,7 +34,7 @@ d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_data
     .call(d3.axisLeft(y));
 
   // color palette
-  var res = sumstat.map(function(d){ return d.key }) // list of group names
+  var res = sumstat.map(function(d){ return d[0] }) // list of group names
   var color = d3.scaleOrdinal()
     .domain(res)
     .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf','#999999'])
@@ -47,13 +45,13 @@ d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_data
       .enter()
       .append("path")
         .attr("fill", "none")
-        .attr("stroke", function(d){ return color(d.key) })
+        .attr("stroke", function(d){ return color(d[0]) })
         .attr("stroke-width", 1.5)
         .attr("d", function(d){
           return d3.line()
-            .x(function(d) { return x(d.year); })
+            .x(function(d) { return x(+d.year); })
             .y(function(d) { return y(+d.n); })
-            (d.values)
+            (d[1])
         })
 
 })
