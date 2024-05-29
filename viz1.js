@@ -64,7 +64,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
           .x(function(d) { return x(d.year) })
           .y(function(d) { return y1(+d.average_temp) })
         )
-        .attr("stroke", "#1E88E5")
+        .attr("stroke", "#1E88E5")  //blue temp line
         .style("stroke-width", 4)
         .style("fill", "none")
 
@@ -76,7 +76,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
           .x(function(d) { return x(d.year) })
           .y(function(d) { return y2(+d.value) })
         )
-        .attr("stroke", "#D81B60")
+        .attr("stroke", "#D81B60")  //red co2 line
         .style("stroke-width", 4)
         .style("fill", "none");
 
@@ -112,6 +112,63 @@ d3.csv("./data/modified_data.csv").then( function(data) {
         update(selectedOption)
     })
 
+    // This allows to find the closest X index of the mouse:
+    var bisect = d3.bisector(function(d) { return d.year; }).left;
+
+    // Create the circle that travels along the curve of chart
+    var focus = svg
+      .append('g')
+      .append('circle')
+      .style("fill", "none")
+      .attr("stroke", "black")
+      .attr('r', 8.5)
+      .style("opacity", 10)
+
+    // Create the text that travels along the curve of chart
+    var focusText = svg
+      .append('g')
+      .append('text')
+      .style("opacity", 0)
+      .attr("text-anchor", "left")
+      .attr("alignment-baseline", "middle")
+
+    var selectedGroup = allGroup[0];
+    var tooltipData = data.filter(function(d) { return d.state == selectedGroup; }); 
+    
+    // Create a rect on top of the svg area: this rectangle recovers mouse position
+    var rect = svg.append('rect')
+      .style("fill", "none")
+      .style("pointer-events", "all")
+      .attr('width', width)
+      .attr('height', height);
+
+    // What happens when the mouse move -> show the annotations at the right positions.
+    rect.on('mouseover', mouseover)
+      .on('mousemove', mousemove)
+      .on('mouseout', mouseout);
+
+    function mousemove() {
+      var x0 = x.invert(d3.mouse(this)[0]);
+      var i = bisect(tooltipData, x0, 1);
+      var selectedData = tooltipData[i];
+      focus.attr("cx", x(selectedData.year))
+          .attr("cy", y(selectedData.average_temp));
+      focusText.html("Year: " + selectedData.year + ", Temp: " + selectedData.average_temp)
+          .attr("x", x(selectedData.year) + 15)
+          .attr("y", y(selectedData.average_temp));
+    }
+
+    // What happens when the mouse move -> show the annotations at the right positions.
+    function mouseover() {
+      focus.style("opacity", 1)
+      focusText.style("opacity",1)
+    }
+    function mouseout() {
+      focus.style("opacity", 0)
+      focusText.style("opacity", 0)
+    }
+
+
     // Add labels to axes
     svg.append("text")
     .attr("class", "x label")
@@ -133,7 +190,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
     .attr("class", "y label")
     .attr("text-anchor", "middle")
     .attr("x", height/2)
-    .attr("y", -width-60)
+    .attr("y", -width-65)
     .attr("dy", ".75em")
     .attr("transform", "rotate(90)")
     .text("Yearly Summed CO2 Emission Value (log scale)");

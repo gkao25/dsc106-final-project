@@ -19,15 +19,24 @@
     and its temperature?
 </h2>
 
-<!-- Initialize a select button -->
+<!-- Line Chart -->
 <label for="selectButton"> Select State:</label>
 <select id="selectButton"></select>
 
-<!-- Create a div where the graph will take place -->
+<div class="input-color">
+    <text>Temperature</text>
+    <div class="color-box" style="background-color: #1E88E5;"></div>
+</div>
+<div class="input-color">
+    <text>CO2 Emission</text>
+    <div class="color-box" style="background-color: #D81B60;"></div>
+</div>
+
 <div id="viz1"></div>
 <script src="viz1.js"></script>
 
 
+<!-- Map -->
 
 <div>
     <label for="year2">Select Year for Map 2:</label>

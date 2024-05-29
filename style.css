@@ -55,3 +55,20 @@ h3 {
     border-radius: 8px;
     pointer-events: none;
 }
+
+/* legend */
+.input-color {
+    position: relative;
+}
+.input-color input {
+    padding-left: 20px;
+}
+.input-color .color-box {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    background-color: #ccc;
+    position: absolute;
+    left: 550px;
+    top: 8px;
+}
