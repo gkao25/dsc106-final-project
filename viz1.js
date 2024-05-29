@@ -1,5 +1,5 @@
 // set the dimensions and margins of the graph
-var margin = {top: 0, right: 200, bottom: 50, left: 100},
+var margin = {top: 0, right: 210, bottom: 50, left: 100},
     width = 1400 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -48,8 +48,8 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       .call(d3.axisLeft(y1));
 
     // Add second Y axis
-    const y2 = d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) { return +d.value; })])
+    const y2 = d3.scaleLog()
+      .domain([1, d3.max(data, function(d) { return +d.value; })])
       .range([height, 0]);
     svg.append("g")
       .attr("class", "y axis")
@@ -64,7 +64,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
           .x(function(d) { return x(d.year) })
           .y(function(d) { return y1(+d.average_temp) })
         )
-        .attr("stroke", "blue")
+        .attr("stroke", "#1E88E5")
         .style("stroke-width", 4)
         .style("fill", "none")
 
@@ -76,7 +76,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
           .x(function(d) { return x(d.year) })
           .y(function(d) { return y2(+d.value) })
         )
-        .attr("stroke", "red")
+        .attr("stroke", "#D81B60")
         .style("stroke-width", 4)
         .style("fill", "none");
 
@@ -94,7 +94,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
             .x(function(d) { return x(d.year) })
             .y(function(d) { return y1(+d.average_temp) })
           )
-          .attr("stroke", function(d){ return myColor(selectedGroup) });
+          //.attr("stroke", function(d){ return myColor(selectedGroup) });
       line2.datum(dataFilter)
           .transition()
           .duration(1000)
@@ -112,4 +112,29 @@ d3.csv("./data/modified_data.csv").then( function(data) {
         update(selectedOption)
     })
 
+    // Add labels to axes
+    svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "middle")
+    .attr("x", width/2)
+    .attr("y", height + 40)
+    .text("Year");
+
+    svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("x", -height/2)
+    .attr("y", -55)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text("Yearly Average Temperature (°F)");
+
+    svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("x", height/2)
+    .attr("y", -width-60)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(90)")
+    .text("Yearly Summed CO2 Emission Value (log scale)");
 })

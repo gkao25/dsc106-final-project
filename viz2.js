@@ -7,7 +7,7 @@ const tooltip2 = d3.select("body").append("div")
 
 Promise.all([
     d3.json("https://d3js.org/us-10m.v1.json"),
-    d3.csv("data/test_data.csv")
+    d3.csv("data/map_data.csv")
 ]).then(([us, data]) => {
     data.forEach(d => {
         d.value = +d.value;
