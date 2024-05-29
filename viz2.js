@@ -1,74 +1,72 @@
-const svg2 = d3.select("#map2");
-const path2 = d3.geoPath();
-const color2 = d3.scaleQuantize().range(d3.schemeReds[9]);
-const tooltip2 = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+d3.csv("/data/map_data.csv").then(function(data) {
+    // Extract unique years from the dataset
+    const years = [...new Set(data.map(d => d.year))];
 
-Promise.all([
-    d3.json("https://d3js.org/us-10m.v1.json"),
-    d3.csv("data/map_data.csv")
-]).then(([us, data]) => {
-    data.forEach(d => {
-        d.value = +d.value;
-        d.year = +d.year;
-    });
+    // Populate the dropdown menu with years
+    const select = d3.select("#year2");
+    select.selectAll("option")
+      .data(years)
+      .enter()
+      .append("option")
+      .text(d => d);
 
-    const years = Array.from(new Set(data.map(d => d.year)));
-    const yearSelect2 = d3.select("#year2");
+    // Set up the map dimensions
+    const width = 960;
+    const height = 600;
 
-    yearSelect2.selectAll("option")
-        .data(years)
-        .enter()
-        .append("option")
-        .text(d => d)
-        .attr("value", d => d);
+    // Create the map svg
+    const svg = d3.select("#map2")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
 
-    yearSelect2.on("change", function(event) {
-        const selectedYear = +this.value;
-        updateMap2(selectedYear);
-    });
+    // Load the US states TopoJSON data
+    d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-albers-10m.json").then(function(us) {
+      // Create a path generator
+      const path = d3.geoPath();
 
-    updateMap2(years[0]);
+      // Create a color scale for average temperature
+      const color = d3.scaleSequential()
+        .domain(d3.extent(data, d => +d.average_temp).reverse())
+        .interpolator(d3.interpolateRdYlBu);
 
-    function updateMap2(year) {
-        const yearData = data.filter(d => d.year === year);
-        const valueByState = {};
-        yearData.forEach(d => {
-            valueByState[d.state] = d.value;
+      // Create a tooltip
+      const tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("visibility", "hidden");
+
+      // Draw the states
+      svg.append("g")
+        .selectAll("path")
+        .data(topojson.feature(us, us.objects.states).features)
+        .join("path")
+        .attr("d", path)
+        .attr("fill", function(d) {
+          const state = data.find(s => s.state === d.properties.name && s.year === select.property("value"));
+          return state ? color(+state.average_temp) : "#ccc";
+        })
+        .on("mouseover", function(event, d) {
+          const state = data.find(s => s.state === d.properties.name && s.year === select.property("value"));
+          tooltip.html(`<strong>${state.state}</strong><br>${state['sector-name']}`);
+          tooltip.style("visibility", "visible");
+        })
+        .on("mousemove", function(event) {
+          tooltip.style("top", (event.pageY - 10) + "px")
+            .style("left", (event.pageX + 10) + "px");
+        })
+        .on("mouseout", function() {
+          tooltip.style("visibility", "hidden");
         });
 
-        color2.domain(d3.extent(yearData, d => d.value));
-
-        svg2.selectAll("path").remove();
-
-        svg2.append("g")
-            .selectAll("path")
-            .data(topojson.feature(us, us.objects.states).features)
-            .join("path")
-            .attr("class", "state")
-            .attr("d", path2)
-            .attr("fill", d => {
-                const state = d.properties.name;
-                return valueByState[state] ? color2(valueByState[state]) : "#ccc";
-            })
-            .on("mouseover", function(event, d) {
-                const state = d.properties.name;
-                const value = valueByState[state] || 0;
-                tooltip2.transition().duration(200).style("opacity", .9);
-                tooltip2.html(`State: ${state}<br>CO2: ${value}`)
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mousemove", function(event) {
-                tooltip2
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mouseout", function() {
-                tooltip2.transition().duration(500).style("opacity", 0);
-            });
-    }
-}).catch(error => {
-    console.error('Error loading or processing data:', error);
-});
+      // Update the map when the year changes
+      select.on("change", function() {
+        svg.selectAll("path")
+          .attr("fill", function(d) {
+            const state = data.find(s => s.state === d.properties.name && s.year === select.property("value"));
+            return state ? color(+state.average_temp) : "#ccc";
+          });
+      });
+    });
+  });
