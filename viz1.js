@@ -12,7 +12,7 @@ const svg = d3.select("#viz1")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 //Read the data
-d3.csv("./data/data.csv").then( function(data) {
+d3.csv("./data/modified_data.csv").then( function(data) {
 
     // List of groups (here I have one group per column)
     const allGroup = new Set(data.map(d => d.state))
@@ -39,25 +39,46 @@ d3.csv("./data/data.csv").then( function(data) {
       .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(x).ticks(7));
 
-    // Add Y axis
-    const y = d3.scaleLinear()
+    // Add Y1 axis
+    const y1 = d3.scaleLinear()
       .domain([0, d3.max(data, function(d) { return +d.average_temp; })])
       .range([ height, 0 ]);
     svg.append("g")
-      .call(d3.axisLeft(y));
+      .attr("class", "y axis")
+      .call(d3.axisLeft(y1));
 
-    // Initialize line with first group of the list
-    const line = svg
-      .append('g')
+    // Add second Y axis
+    const y2 = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) { return +d.value; })])
+      .range([height, 0]);
+    svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform", `translate(${width}, 0)`)
+      .call(d3.axisRight(y2));
+
+    // Initialize line for average temperature with the first group of the list
+    const line1 = svg
       .append("path")
         .datum(data.filter(function(d){return d.state=="Alabama"}))
         .attr("d", d3.line()
           .x(function(d) { return x(d.year) })
-          .y(function(d) { return y(+d.average_temp) })
+          .y(function(d) { return y1(+d.average_temp) })
         )
-        .attr("stroke", function(d){ return myColor("valueA") })
+        .attr("stroke", "blue")
         .style("stroke-width", 4)
         .style("fill", "none")
+
+    // Initialize line for CO2 emissions with the second group of the list
+    const line2 = svg
+      .append("path")
+        .datum(data.filter(function(d){return d.state=="Alabama"}))
+        .attr("d", d3.line()
+          .x(function(d) { return x(d.year) })
+          .y(function(d) { return y2(+d.value) })
+        )
+        .attr("stroke", "red")
+        .style("stroke-width", 4)
+        .style("fill", "none");
 
     // A function that update the chart
     function update(selectedGroup) {
@@ -66,15 +87,21 @@ d3.csv("./data/data.csv").then( function(data) {
       const dataFilter = data.filter(function(d){return d.state==selectedGroup})
 
       // Give these new data to update line
-      line
-          .datum(dataFilter)
+      line1.datum(dataFilter)
           .transition()
           .duration(1000)
           .attr("d", d3.line()
             .x(function(d) { return x(d.year) })
-            .y(function(d) { return y(+d.average_temp) })
+            .y(function(d) { return y1(+d.average_temp) })
           )
-          .attr("stroke", function(d){ return myColor(selectedGroup) })
+          .attr("stroke", function(d){ return myColor(selectedGroup) });
+      line2.datum(dataFilter)
+          .transition()
+          .duration(1000)
+          .attr("d", d3.line()
+            .x(function(d) { return x(d.year); })
+            .y(function(d) { return y2(+d.value); })
+          );    
     }
 
     // When the button is changed, run the updateChart function
