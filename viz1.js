@@ -85,6 +85,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
 
       // Create new data with the selection?
       const dataFilter = data.filter(function(d){return d.state==selectedGroup})
+      tooltipData = dataFilter
 
       // Give these new data to update line
       line1.datum(dataFilter)
@@ -123,6 +124,14 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       .attr("stroke", "black")
       .attr('r', 8.5)
       .style("opacity", 10)
+    
+    var focus2 = svg
+      .append('g')
+      .append('circle')
+      .style("fill", "none")
+      .attr("stroke", "black")
+      .attr('r', 8.5)
+      .style("opacity", 0)
 
     // Create the text that travels along the curve of chart
     var focusText = svg
@@ -132,7 +141,15 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       .attr("text-anchor", "left")
       .attr("alignment-baseline", "middle")
 
-    var selectedGroup = allGroup[0];
+    var focusText2 = svg
+      .append('g')
+      .append('text')
+      .style("opacity", 0)
+      .attr("text-anchor", "left")
+      .attr("alignment-baseline", "middle")
+
+
+    var selectedGroup = Array.from(allGroup)[0];
     var tooltipData = data.filter(function(d) { return d.state == selectedGroup; }); 
     
     // Create a rect on top of the svg area: this rectangle recovers mouse position
@@ -147,25 +164,44 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       .on('mousemove', mousemove)
       .on('mouseout', mouseout);
 
-    function mousemove() {
-      var x0 = x.invert(d3.mouse(this)[0]);
+    function mousemove(event) {
+      var x0 = x.invert(d3.pointer(event, this)[0]);
       var i = bisect(tooltipData, x0, 1);
       var selectedData = tooltipData[i];
-      focus.attr("cx", x(selectedData.year))
-          .attr("cy", y(selectedData.average_temp));
-      focusText.html("Year: " + selectedData.year + ", Temp: " + selectedData.average_temp)
-          .attr("x", x(selectedData.year) + 15)
-          .attr("y", y(selectedData.average_temp));
+      
+      if (selectedData) {
+        focus.attr("cx", x(selectedData.year))
+            .attr("cy", y1(selectedData.average_temp))
+            .style("opacity", 1);
+    
+        focusText.html("Year: " + selectedData.year + ", Temp: " + selectedData.average_temp)
+            .attr("x", x(selectedData.year) + 15)
+            .attr("y", y1(selectedData.average_temp))
+            .style("opacity", 1);
+          
+        focus2.attr("cx", x(selectedData.year))
+            .attr("cy", y2(selectedData.value))
+            .style("opacity", 1);
+  
+        focusText2.html("Year: " + selectedData.year + ", CO2: " + selectedData.value)
+            .attr("x", x(selectedData.year) + 15)
+            .attr("y", y2(selectedData.value))
+            .style("opacity", 1);
+      }
     }
 
     // What happens when the mouse move -> show the annotations at the right positions.
     function mouseover() {
       focus.style("opacity", 1)
       focusText.style("opacity",1)
+      focus2.style("opacity", 1)
+      focusText2.style("opacity", 1)
     }
     function mouseout() {
       focus.style("opacity", 0)
       focusText.style("opacity", 0)
+      focus2.style("opacity", 0)
+      focusText2.style("opacity", 0)
     }
 
 
