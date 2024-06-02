@@ -1,4 +1,4 @@
-d3.csv("/data/map_data.csv").then(function(data) {
+d3.csv("./data/map_data.csv").then(function(data) {
     // Extract unique years from the dataset
     const years = [...new Set(data.map(d => d.year))];
 
