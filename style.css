@@ -85,6 +85,8 @@ h3 {
     width: 400px;
     height: 20px;
     background: linear-gradient(to right, #85aefe, #ff4d13);
+    margin-left: 4px;
+    margin-right: 4px;
 }
   
 .legend-labels {
