@@ -35,7 +35,7 @@ h3 {
     margin-bottom: 20px;
 }
 
-#my_dataviz {
+#viz1 {
     margin-top: 20px;
     align-content: center;
 }
@@ -56,7 +56,7 @@ h3 {
     pointer-events: none;
 }
 
-/* legend */
+/* line chart legend */
 .input-color {
     position: relative;
 }
@@ -84,7 +84,7 @@ h3 {
 .legend-color {
     width: 400px;
     height: 20px;
-    background: linear-gradient(to right, #ffff00, #800080);
+    background: linear-gradient(to right, #85aefe, #ff4d13);
 }
   
 .legend-labels {

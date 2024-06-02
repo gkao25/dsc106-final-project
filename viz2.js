@@ -27,8 +27,8 @@ d3.csv("./data/map_data.csv").then(function(data) {
 
       // Create a color scale for average temperature
       const color = d3.scaleSequential()
-        .domain(d3.extent(data, d => +d.average_temp).reverse())
-        .interpolator(d3.interpolateWarm);
+        .domain(d3.extent(data, d => +d.average_temp))
+        .interpolator(d3.interpolateLab("#85aefe", "#ff4d13"));
 
       // Create a tooltip
       const tooltip = d3.select("body")
