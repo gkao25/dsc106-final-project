@@ -54,7 +54,22 @@ d3.csv("./data/map_data.csv").then(function(data) {
         })
         .on("mouseover", function(event, d) {
           const state = data.find(s => s.state === d.properties.name && s.year === select.property("value"));
-          tooltip.html(`<strong>${state.state}</strong><br>${String(state['sector-name']).split(' ')[0]}: ${state['value']}`);
+          const stateData = data.filter(s => s.state === d.properties.name && s.year === select.property("value"));
+          const industrialCO2 = stateData.find(s => s['sector-name'] === 'Industrial carbon dioxide emissions')?.value || 'N/A';
+          const residentialCO2 = stateData.find(s => s['sector-name'] === 'Residential carbon dioxide emissions')?.value || 'N/A';
+          const commercialCO2 = stateData.find(s => s['sector-name'] === 'Commercial carbon dioxide emissions')?.value || 'N/A';
+          const transportationCO2 = stateData.find(s => s['sector-name'] === 'Transportation carbon dioxide emissions')?.value || 'N/A';
+          const electricCO2 = stateData.find(s => s['sector-name'] === 'Electric Power carbon dioxide emissions')?.value || 'N/A';
+          tooltip.html(`
+              <strong>${d.properties.name}</strong><br>
+              Industrial CO2: ${industrialCO2}<br>
+              Residential CO2: ${residentialCO2}<br>
+              Commercial CO2: ${commercialCO2}<br>
+              Transportation CO2: ${transportationCO2}<br>
+              Electric Power CO2: ${electricCO2}
+            `)
+              .style("left", (event.pageX) + "px")
+              .style("top", (event.pageY - 28) + "px");
           tooltip.style("visibility", "visible");
         })
         .on("mousemove", function(event) {
