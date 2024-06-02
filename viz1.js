@@ -164,15 +164,11 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       var selectedData = tooltipData[i];
       
       if (selectedData) {
-        // rounding 
-        let t = String(selectedData.average_temp).substring(0,5)
-        let c = String(selectedData.value).substring(0,6)
-
         focus.attr("cx", x(selectedData.year))
             .attr("cy", y1(selectedData.average_temp))
             .style("opacity", 1);
     
-        focusText.html("Year: " + selectedData.year + ", Temp: " + t + ", CO2: " + c)
+        focusText.html("Year: " + selectedData.year + ", Temp: " + selectedData.average_temp + ", CO2: " + selectedData.value)
             .attr("x", x(selectedData.year) + 15)
             .attr("y", (y1(selectedData.average_temp) + y2(selectedData.value)) / 2)
             .style("opacity", 1)
