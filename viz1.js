@@ -59,7 +59,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
           .x(function(d) { return x(d.year) })
           .y(function(d) { return y1(+d.average_temp) })
         )
-        .attr("stroke", "#1E88E5")  //blue temp line
+        .attr("stroke", "#D81B60")  //red temp line
         .style("stroke-width", 4)
         .style("fill", "none")
 
@@ -71,7 +71,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
           .x(function(d) { return x(d.year) })
           .y(function(d) { return y2(+d.value) })
         )
-        .attr("stroke", "#D81B60")  //red co2 line
+        .attr("stroke", "#1E88E5")  //blue co2 line
         .style("stroke-width", 4)
         .style("fill", "none");
 
@@ -108,7 +108,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
         update(selectedOption)
     })
 
-    // This allows to find the closest X index of the mouse:
+    // This allows to find the closest X inx of the mouse:
     var bisect = d3.bisector(function(d) { return d.year; }).left;
 
     // Create the circle that travels along the curve of chart
@@ -171,13 +171,11 @@ d3.csv("./data/modified_data.csv").then( function(data) {
         focus.attr("cx", x(selectedData.year))
             .attr("cy", y1(selectedData.average_temp))
             .style("opacity", 1);
-            // .style("left", (d3.mouse(this)[0]+70) + "px");
     
         focusText.html("Year: " + selectedData.year + ", Temp: " + t + ", CO2: " + c)
             .attr("x", x(selectedData.year) + 15)
-            .attr("y", y1(selectedData.average_temp))
-            .attr("y", y2(selectedData.value))
-            .style("opacity", 1);
+            .attr("y", (y1(selectedData.average_temp) + y2(selectedData.value)) / 2)
+            .style("opacity", 1)
           
         focus2.attr("cx", x(selectedData.year))
             .attr("cy", y2(selectedData.value))
