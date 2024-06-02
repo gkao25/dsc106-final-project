@@ -46,10 +46,10 @@ h3 {
 .tooltip {
     position: absolute;
     text-align: center;
-    width: 350px;
+    width: 290px;
     height: 150px;
     padding: 2px;
-    font: 11px;
+    font: 10px;
     background: lightsteelblue;
     pointer-events: none;
 }
