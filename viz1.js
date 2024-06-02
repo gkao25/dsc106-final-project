@@ -26,11 +26,6 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       .text(function (d) { return d; }) // text showed in the menu
       .attr("value", function (d) { return d; }) // corresponding value returned by the button
 
-    // A color scale: one color for each group
-    const myColor = d3.scaleOrdinal()
-      .domain(allGroup)
-      .range(d3.schemeSet2);
-
     // Add X axis --> it is a date format
     const x = d3.scaleLinear()
       .domain(d3.extent(data, function(d) { return d.year; }))
@@ -148,7 +143,6 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       .attr("text-anchor", "left")
       .attr("alignment-baseline", "middle")
 
-
     var selectedGroup = Array.from(allGroup)[0];
     var tooltipData = data.filter(function(d) { return d.state == selectedGroup; }); 
     
@@ -170,29 +164,35 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       var selectedData = tooltipData[i];
       
       if (selectedData) {
+        // rounding 
+        let t = String(selectedData.average_temp).substring(0,5)
+        let c = String(selectedData.value).substring(0,6)
+
         focus.attr("cx", x(selectedData.year))
             .attr("cy", y1(selectedData.average_temp))
             .style("opacity", 1);
+            // .style("left", (d3.mouse(this)[0]+70) + "px");
     
-        focusText.html("Year: " + selectedData.year + ", Temp: " + selectedData.average_temp)
+        focusText.html("Year: " + selectedData.year + ", Temp: " + t + ", CO2: " + c)
             .attr("x", x(selectedData.year) + 15)
             .attr("y", y1(selectedData.average_temp))
+            .attr("y", y2(selectedData.value))
             .style("opacity", 1);
           
         focus2.attr("cx", x(selectedData.year))
             .attr("cy", y2(selectedData.value))
             .style("opacity", 1);
   
-        focusText2.html("Year: " + selectedData.year + ", CO2: " + selectedData.value)
-            .attr("x", x(selectedData.year) + 15)
-            .attr("y", y2(selectedData.value))
-            .style("opacity", 1);
+        // focusText2.html("Year: " + selectedData.year + ", CO2: " + selectedData.value)
+        //     .attr("x", x(selectedData.year) + 15)
+        //     .attr("y", y2(selectedData.value))
+        //     .style("opacity", 1);
       }
     }
 
     // What happens when the mouse move -> show the annotations at the right positions.
     function mouseover() {
-      focus.style("opacity", 1)
+      focus.style("opacity", 1).style("left", (d3.mouse(this)[0]+70) + "px")
       focusText.style("opacity",1)
       focus2.style("opacity", 1)
       focusText2.style("opacity", 1)
@@ -203,7 +203,6 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       focus2.style("opacity", 0)
       focusText2.style("opacity", 0)
     }
-
 
     // Add labels to axes
     svg.append("text")
