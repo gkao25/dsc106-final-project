@@ -38,8 +38,9 @@ d3.csv("/data/map_data.csv").then(function(data) {
         .style("visibility", "hidden")
         .style("background-color", "white")
         .style("border", "solid")
+        .style("border-width", "2px")
         .style("border-radius", "10px")
-        .style("padding", "5px");
+        .style("padding", "3px");
 
       // Draw the states
       svg.append("g")
@@ -53,7 +54,7 @@ d3.csv("/data/map_data.csv").then(function(data) {
         })
         .on("mouseover", function(event, d) {
           const state = data.find(s => s.state === d.properties.name && s.year === select.property("value"));
-          tooltip.html(`<strong>${state.state}</strong><br>${state['sector-name']}: ${state['value']}`);
+          tooltip.html(`<strong>${state.state}</strong><br>${String(state['sector-name']).split(' ')[0]}: ${state['value']}`);
           tooltip.style("visibility", "visible");
         })
         .on("mousemove", function(event) {
