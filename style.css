@@ -72,3 +72,25 @@ h3 {
     left: 550px;
     top: 8px;
 }
+
+/* map 2 legend */
+.legend {
+    margin-left: 460px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+  
+.legend-color {
+    width: 400px;
+    height: 20px;
+    background: linear-gradient(to right, #ffff00, #800080);
+}
+  
+.legend-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+    margin-top: 5px;
+    font-size: 15px;
+}
