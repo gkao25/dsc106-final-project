@@ -62,11 +62,11 @@ d3.csv("./data/map_data.csv").then(function(data) {
           const electricCO2 = stateData.find(s => s['sector-name'] === 'Electric Power carbon dioxide emissions')?.value || 'N/A';
           tooltip.html(`
               <strong>${d.properties.name}</strong><br>
-              Industrial CO2: ${industrialCO2}<br>
-              Residential CO2: ${residentialCO2}<br>
-              Commercial CO2: ${commercialCO2}<br>
-              Transportation CO2: ${transportationCO2}<br>
-              Electric Power CO2: ${electricCO2}
+              Industrial: ${industrialCO2}<br>
+              Residential: ${residentialCO2}<br>
+              Commercial: ${commercialCO2}<br>
+              Transportation: ${transportationCO2}<br>
+              Electric Power: ${electricCO2}
             `)
               .style("left", (event.pageX) + "px")
               .style("top", (event.pageY - 28) + "px");
