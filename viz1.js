@@ -32,7 +32,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
       .range([ 0, width ]);
     svg.append("g")
       .attr("transform", `translate(0, ${height})`)
-      .call(d3.axisBottom(x).ticks(7));
+      .call(d3.axisBottom(x).tickFormat(d3.format("d")));
 
     // Add Y1 axis
     const y1 = d3.scaleLinear()

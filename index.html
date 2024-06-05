@@ -11,9 +11,20 @@
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
+<!-- Title -->
 <h1>How much does CO2 emission affect climate change?</h1>
 <h3>by Gloria Kao, Eldrick Dean Solano, Judel Ancayan</h3>
 <br>
+<div>
+    <b>Demo Video: </b><a href="https://youtu.be/_OTQ28fm-6I">YouTube Link</a>
+</div>
+<div class="explanation">
+    The dangerous environmental changes have been a large problem in the modern 
+    world, causing a slow approach towards inhabitable weather/temperature and a 
+    high increase in both the volume and severity of natural disasters. In this 
+    project, we explore a potential cause of one of the temperature changes: 
+    air pollution. 
+</div>
 <h2>
     Is there a causal correlation between the amount of CO2 emission per state 
     and its temperature?
@@ -22,26 +33,34 @@
 <!-- Line Chart -->
 <label for="selectButton"> Select State:</label>
 <select id="selectButton"></select>
-
 <div class="input-color">
-    <text>Temperature</text>
+    Temperature
     <div class="color-box" style="background-color: #D81B60;"></div>
 </div>
 <div class="input-color">
-    <text>CO2 Emission</text>
+    CO2 Emission
     <div class="color-box" style="background-color: #1E88E5;"></div>
 </div>
-
 <div id="viz1"></div>
 <script src="viz1.js"></script>
 
+<div class="explanation">
+    If you shift through the different states via the dropdown menu, you can 
+    see the average temperature and total CO2 emission changes over the years. 
+    The lines do not show a clear growing nor declining trend, making it 
+    difficult to assess the correlation between the two variables. 
+    <br>
+    Thus, rather than comparing the change in time for each state, we would like 
+    to compare the states more directly via the choropleth map below. 
+</div>
 
 <!-- Map -->
+<br>
+<br>
 <h2>
     How do different sources of CO2 emission and temperature for each state 
     change over the years?
 </h2>
-
 <div>
     <label for="year2">Select Year for Map:</label>
     <select id="year2"></select>
@@ -53,6 +72,32 @@
         </div>
     </div>
 </div>
-
 <svg id="map2" width="960" height="600"></svg>
 <script src="viz2.js"></script>
+
+<div class="explanation">
+    <br>
+    The color of each state show the relative temperature - the bluer, the 
+    colder it usually is, and the redder, the hotter. We can see that this 
+    aligns with our expectations of northern states generally being colder than 
+    the southern states, and it's consisten throughout the years. We also notice 
+    that the northern states do seem to become more and more red over the years, 
+    and it's particularly visible if you compare the first year of data, 1970, 
+    with the latest, 2023. 
+</div>
+
+<!-- Data Source -->
+<div>
+    <br>
+    <br>
+    <h2>
+        Data Source
+    </h2>
+    <a href="https://www.kaggle.com/datasets/justinrwong/average-monthly-temperature-by-us-state">
+        Average Monthly Temperature by US State
+    </a>
+    <br>
+    <a href="https://www.kaggle.com/datasets/alistairking/u-s-co2-emissions">
+        CO2 Emissions (in U.S.)
+    </a>
+</div>
