@@ -43,50 +43,55 @@ d3.csv("./data/map_data.csv").then(function(data) {
         .style("padding", "3px");
 
       // Draw the states
-      svg.append("g")
+      const states = svg.append("g")
         .selectAll("path")
         .data(topojson.feature(us, us.objects.states).features)
         .join("path")
         .attr("d", path)
         .attr("fill", function(d) {
-          const state = data.find(s => s.state === d.properties.name && s.year === select.property("value"));
-          return state ? color(+state.average_temp) : "#ccc";
+          const stateData = data.filter(s => s.state === d.properties.name && s.year === select.property("value"));
+          const averageTemp = d3.mean(stateData, d => +d.average_temp);
+          return averageTemp ? color(averageTemp) : "#ccc";
         })
         .on("mouseover", function(event, d) {
-          const state = data.find(s => s.state === d.properties.name && s.year === select.property("value"));
           const stateData = data.filter(s => s.state === d.properties.name && s.year === select.property("value"));
-          const industrialCO2 = stateData.find(s => s['sector-name'] === 'Industrial carbon dioxide emissions')?.value || 'N/A';
-          const residentialCO2 = stateData.find(s => s['sector-name'] === 'Residential carbon dioxide emissions')?.value || 'N/A';
-          const commercialCO2 = stateData.find(s => s['sector-name'] === 'Commercial carbon dioxide emissions')?.value || 'N/A';
-          const transportationCO2 = stateData.find(s => s['sector-name'] === 'Transportation carbon dioxide emissions')?.value || 'N/A';
-          const electricCO2 = stateData.find(s => s['sector-name'] === 'Electric Power carbon dioxide emissions')?.value || 'N/A';
+          const industrialCO2 = stateData.find(s => s['sector-name'] === 'Industrial carbon dioxide emissions')?.value;
+          const residentialCO2 = stateData.find(s => s['sector-name'] === 'Residential carbon dioxide emissions')?.value;
+          const commercialCO2 = stateData.find(s => s['sector-name'] === 'Commercial carbon dioxide emissions')?.value;
+          const transportationCO2 = stateData.find(s => s['sector-name'] === 'Transportation carbon dioxide emissions')?.value;
+          const electricCO2 = stateData.find(s => s['sector-name'] === 'Electric Power carbon dioxide emissions')?.value;
+
+          tooltip.transition()
+            .duration(50)
+            .style("opacity", .9);
           tooltip.html(`
-              <strong>${d.properties.name}</strong><br>
-              Industrial: ${industrialCO2}<br>
-              Residential: ${residentialCO2}<br>
-              Commercial: ${commercialCO2}<br>
-              Transportation: ${transportationCO2}<br>
-              Electric Power: ${electricCO2}
-            `)
-              .style("left", (event.pageX) + "px")
-              .style("top", (event.pageY - 28) + "px");
+            <strong>${d.properties.name}</strong><br>
+            Industrial: ${industrialCO2}<br>
+            Residential: ${residentialCO2}<br>
+            Commercial: ${commercialCO2}<br>
+            Transportation: ${transportationCO2}<br>
+            Electric Power: ${electricCO2}
+          `)
+            .style("left", (event.pageX) + "px")
+            .style("top", (event.pageY - 28) + "px");
           tooltip.style("visibility", "visible");
         })
-        .on("mousemove", function(event) {
-          tooltip.style("top", (event.pageY - 10) + "px")
-            .style("left", (event.pageX + 10) + "px");
-        })
         .on("mouseout", function() {
-          tooltip.style("visibility", "hidden");
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
         });
 
       // Update the map when the year changes
       select.on("change", function() {
-        svg.selectAll("path")
+        states.transition()
+          .duration(500)
           .attr("fill", function(d) {
-            const state = data.find(s => s.state === d.properties.name && s.year === select.property("value"));
-            return state ? color(+state.average_temp) : "#ccc";
+            const stateData = data.filter(s => s.state === d.properties.name && s.year === select.property("value"));
+            const averageTemp = d3.mean(stateData, d => +d.average_temp);
+            return averageTemp ? color(averageTemp) : "#ccc";
           });
       });
+      
     });
   });
