@@ -213,7 +213,7 @@ d3.csv("./data/modified_data.csv").then( function(data) {
     .attr("y", -55)
     .attr("dy", ".75em")
     .attr("transform", "rotate(-90)")
-    .text("Yearly Average Temperature (°F)");
+    .text("Yearly Average Temperature");
 
     svg.append("text")
     .attr("class", "y label")
