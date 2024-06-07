@@ -23,7 +23,7 @@
     world, causing a slow approach towards inhabitable weather/temperature and a 
     high increase in both the volume and severity of natural disasters. In this 
     project, we explore a potential cause of one of the temperature changes: 
-    air pollution. 
+    greenhouse gas emission. 
 </div>
 <h2>
     Is there a causal correlation between the amount of CO2 emission per state 
@@ -38,21 +38,20 @@
     <div class="color-box" style="background-color: #D81B60;"></div>
 </div>
 <div class="input-color">
+    CO2 Emission (million metric tons)
     <div class="color-box" style="background-color: #1E88E5;"></div>
-
-    <span>CO2 Emission (million metric tons)</span>
 </div>
 <div id="viz1"></div>
 <script src="viz1.js"></script>
 
 <div class="explanation">
-    If you shift through the different states via the dropdown menu, you can 
-    see the average temperature and total CO2 emission changes over the years. 
-    The lines do not show a clear growing nor declining trend, making it 
-    difficult to assess the correlation between the two variables. 
+    The average temperature and total CO2 emission changes can be seen over the years by 
+    selecting different states via the dropdown menu. The lines do not show a clear growing 
+    or declining trend in either variable. Therefore, it is difficult to assess the correlation 
+    between the two variables.
     <br>
-    Thus, rather than comparing the change in time for each state, we would like 
-    to compare the states more directly via the choropleth map below. 
+    Thus, rather than comparing the change in time for each state, we would like to compare 
+    the states more directly via the choropleth map below. 
 </div>
 
 <!-- Map -->
@@ -77,23 +76,46 @@
 <script src="viz2.js"></script>
 
 <h4>
+    <br>
     * There is no recorded data for temperature and CO2 emissions for Alaska and Hawaii.
 </h4>
 <div class="explanation">
     <br>
-    The color of each state show the relative temperature - the bluer the color, the 
-    colder it usually is, and the redder, the hotter. We can see that this 
-    aligns with our expectations of northern states generally being colder than 
-    the southern states, and it's consisten throughout the years. We also notice 
-    that the northern states do seem to become more and more red over the years, 
-    and it's particularly visible if you compare the first year of data, 1970, 
-    with the latest, 2023. 
+    The color shown per each state corresponds to the relative temperature across the entire 
+    dataset – the bluer the color, the colder it usually is, and the redder means the hotter. As shown 
+    in the graph, the northern states are generally much colder than the northern states. This is 
+    expected, as the southern states (like California, Texas, and Florida) are in much more tropical 
+    regions, with higher temperatures.  
+</div>
+<div class="explanation">
+    We have annotated each state's CO2 emission by sectors, which includes: industrial, residential, 
+    commercial, transportation, and electric power. We also calculated the total emission over the sectors 
+    to better compare the fuel usage and CO2 emission between different states. There seems to be a slight 
+    correlation – southern, hotter states appear to use more fuels and emit more CO2. However, we did not 
+    include other factors such as population, which is a confounding variable that affect the usage 
+    and total CO2 emissions. 
+</div>
+<div  class="explanation">
+    Lastly with this choropleth, its much easier to see the change in temperature from early years to later 
+    ones, with an overall trend of higher temperatures (this is very easy to see when comparing year 
+    1970 to year 2021). Across all states, there is a general 2-3 degrees Fahrenheit increase in average 
+    temperature in a 50-year span.
+</div>
+
+<div class="explanation">
+    <h2>Conclusion</h2>
+    There is no statistically significant correlation between CO2 emission and temperature per state. There 
+    are many confounding variables that was not when attempting this project, as well as problems with the 
+    data that was not considered whilst procuring the data for this visualization. For instance, the data 
+    only contained yearly temperature averages, as opposed to the hottest and coldest temperatures in each 
+    state. Thus, it was difficult to see any dramatic changes in temperature, as extreme highs would work to 
+    cancel out extreme lows in terms of averages. Another potential way to remedy this problem is to take an 
+    average of a smaller timeframe, such as monthly average temperature, as temperatures stay similar within the 
+    month, but fluctuate a lot within a year.
 </div>
 
 <!-- Data Source -->
 <div>
-    <br>
-    <br>
     <h2>
         Data Source
     </h2>
