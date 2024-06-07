@@ -60,6 +60,7 @@ d3.csv("./data/map_data.csv").then(function(data) {
           const commercialCO2 = stateData.find(s => s['sector-name'] === 'Commercial carbon dioxide emissions')?.value;
           const transportationCO2 = stateData.find(s => s['sector-name'] === 'Transportation carbon dioxide emissions')?.value;
           const electricCO2 = stateData.find(s => s['sector-name'] === 'Electric Power carbon dioxide emissions')?.value;
+          const totalCO2 = Number(industrialCO2) + Number(residentialCO2) + Number(commercialCO2) + Number(transportationCO2) + Number(electricCO2);
 
           tooltip.transition()
             .duration(50)
@@ -70,7 +71,8 @@ d3.csv("./data/map_data.csv").then(function(data) {
             Residential: ${residentialCO2}<br>
             Commercial: ${commercialCO2}<br>
             Transportation: ${transportationCO2}<br>
-            Electric Power: ${electricCO2}
+            Electric Power: ${electricCO2}<br>
+            <strong>Total Emissions: ${totalCO2.toFixed(2)}</strong>
           `)
             .style("left", (event.pageX) + "px")
             .style("top", (event.pageY - 28) + "px");
